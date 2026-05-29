@@ -9,13 +9,13 @@
 #' @param defor_factor deforestation factor from deforestation() Module 4 (unitless)
 #' @return fragmentation score (unitless; higher = more fragmented landscape)
 #'
-fragmentation = function(natural_forest_t2, total_landscape_area, defor_factor) {
+habitat_frag = function(natural_forest_t2, total_landscape_area, defor_factor) {
   
   # derive connectivity proxy from proportion of landscape still forested
   connectivity = natural_forest_t2 / total_landscape_area  # ranges 0-1
-  frag_score = defor_factor / (connectivity + 0.001)        # avoid division by zero
+  fragmentation = defor_factor / (connectivity + 0.001)        # avoid division by zero
   
-  return(frag_score)
+  return(fragmentation)
   
 }
 

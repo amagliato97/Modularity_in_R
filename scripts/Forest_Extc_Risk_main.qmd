@@ -62,6 +62,8 @@ Description: Given net population change, land use change, and climate data, we 
 
 ### (1) Human Geography Contract
 
+Function Name: human_geog()
+
 Description: Takes two census snapshots shows whether the regional population is growing or shrinking. A growing population typically signals increasing pressure on surrounding land.
 
 -   Inputs
@@ -72,6 +74,8 @@ Description: Takes two census snapshots shows whether the regional population is
 -   No parameters
 
 ### (2) Land Use Contract
+
+Function name: land_use()
 
 Description: Compares land cover area at two time points across forest, agricultural, and urban categories. The output summarizes how much land conversion pressure has occurred. This represents how much forest has been replaced by other uses.
 
@@ -88,6 +92,8 @@ Description: Compares land cover area at two time points across forest, agricult
 
 ### (3) Wildfire Risk Contract
 
+Function name: wildfire_risk()
+
 Description: Combines climate conditions (rainfall, temperature), recent fire history, population pressure, and land use change to estimate how fire-prone the region is. Drier, hotter, more disturbed landscapes with more people score higher.
 
 -   Inputs
@@ -102,6 +108,8 @@ Description: Combines climate conditions (rainfall, temperature), recent fire hi
     -   population pressure scaling factor, default 0.001
 
 ### (4) Deforestation
+
+Function name: deforestation()
 
 Description: Calculates how much forest has actually been lost, treating natural forest loss as ecologically more significant than plantation loss. Fire risk amplifies the deforestation factor because fire both directly destroys forest and makes remaining forest more vulnerable.
 
@@ -119,6 +127,8 @@ Description: Calculates how much forest has actually been lost, treating natural
 
 ### (5) Habitat Fragmentation
 
+Function name: habitat_frag()
+
 Description: Takes the deforestation factor and the remaining natural forest area to estimate how broken up the landscape has become. A landscape that has lost a lot of forest and has little remaining is highly fragmented. Fragmented forests have patches of habitat that are small and isolated, which threatens species persistence.
 
 -   Input
@@ -130,6 +140,57 @@ Description: Takes the deforestation factor and the remaining natural forest are
 -   Parameters
     -   small constant 0.001 added to connectivity denominator to prevent division by zero
 
+## Running the Program
+
+Call in functions:
+```{r}
+library(here)
+
+source(here("functions/calc_human_geog.R"))
+source(here("functions/calc_land_use.R"))
+source(here("functions/calc_wildfire_risk.R"))
+source(here("functions/calc_deforestation.R"))
+source(here("functions/calc_habitat_frag.R"))
+```
+
+Create a dataframe:
+```{r}
+
+scenarios = data.frame(
+  pop_t1 = c(50000, 45000, 70000), 
+  pop_t2 = c(60000, 40000, 75000),
+  forest_t1 = c(300000, 400000, 250000), 
+  forest_t2 = c(200000, 350000, 200000), 
+  ag_t1 = c(100000, 300000, 200000), 
+  ag_t2 = c(150000, 400000, 125000), 
+  urban_t1 = c(450000, 300000, 500000), 
+  urban_t2 = c(600000, 350000, 600000), 
+  rainfall = c(2000, 900, 1600), 
+  hectares_burned = c(1800, 250, 980), 
+  avg_temp = c(25, 31, 28), 
+  natural_forest_t1 = c(200000, 250000, 100000), 
+  natural_forest_t2 = c(150000, 150000, 175000), 
+  plantation_t1 = c(100000, 150000, 150000), 
+  plantation_t2 = c(50000, 200000, 25000), 
+  total_landscape_area = c(1000000, 1200000, 1100000)  
+)
+
+```
+
+Create a loop:
+
+--> Shey, could you tackle this? idk how to do it really 
+
 ```{r}
 
 ```
+
+
+
+
+
+
+
+
+
+
