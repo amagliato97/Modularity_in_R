@@ -1,0 +1,71 @@
+---
+title: "Assignment 5: Forest Extinction Risk Modularity"
+author: "Alicia Magliato and Shey Dorji"
+format: html
+editor: visual
+---
+
+## Assignment 5 Instructions
+
+With a partner, think of an example complex data science task/program that you might want to design with:
+
+-   At least 3 modules
+-   1 module must be used at least twice
+-   At least one for (or while) loop
+
+### Planning - Step 1
+
+Sketch a diagram that shows how these modules would be put together to go from inputs to output for the overall program (30pts) write a contract for the overall program (input, output, parameters) (10pts) break the program in to modules (naming them appropriately), write a contract for each one (20pts)
+
+### Implementation - Step 2
+
+Write functions (stored in separate documents) for each module (30pts) write an overall program that manages calls to each function (10pts) create some data and use it to test the program (10pts)
+
+## Modules and Contracts
+
+Our goal is to design modules to quantify forest extinction risk. Our five modules are human geography, land use, wildfire risk, deforestation, and habitat fragmentation.
+
+### Overall Program Contract
+
+-   Input
+-   Output
+-   Parameters
+
+### Human Geography Contract
+
+-   Input
+-   Output
+-   Parameters
+
+
+### Land Use Contract 
+
+-   Input
+-   Output
+-   Parameters
+
+### Wildfire Risk Contract 
+
+-   Input
+-   Output
+-   Parameters
+
+### Deforestation 
+
+-   Input
+-   Output
+-   Parameters
+
+### Habitat Fragmentation 
+
+-   Input
+-   Output
+-   Parameters
+
+```{r}
+
+```
+
+
+
+
