@@ -27,45 +27,109 @@ Our goal is to design modules to quantify forest extinction risk. Our five modul
 
 ### Overall Program Contract
 
--   Input
+Description: Given net population change, land use change, and climate data, we can estimate extinction risk of a species in the landscape by
+
+-   Inputs
+
+    -   pop_t1, pop_t2: regional population at two census time points (persons)
+
+    -   forest_t1, forest_t2: total forest area at two time points (ha)
+
+    -   ag_t1, ag_t2: agricultural area at two time points (ha)
+
+    -   urban_t1, urban_t2: urban area at two time points (ha)
+
+    -   rainfall: total annual rainfall (mm)
+
+    -   hectares_burned: area affected by fire in prior year (ha)
+
+    -   avg_temp: average annual temperature (°C)
+
+    -   natural_forest_t1, natural_forest_t2: natural (non-plantation) forest area at two time points (ha)
+
+    -   plantation_t1, plantation_t2: timber plantation area at two time points (ha)
+
+    -   total_landscape_area: total area of the region (ha)
+
 -   Output
+
+    -   extinction_risk: the likelihood of extinction for a species in the landscape area (unitless; higher values = greater risk)
+
 -   Parameters
 
-### Human Geography Contract
+    -   ecological weighting for natural forests vs. plantation loss
+    -   population scaling factor
+
+### (1) Human Geography Contract
+
+Description: Takes two census snapshots shows whether the regional population is growing or shrinking. A growing population typically signals increasing pressure on surrounding land.
+
+-   Inputs
+    -   pop_t1: population at earlier census (persons)
+    -   pop_t2: population at later census (persons)
+-   Output
+    -   net_pop_change: difference between the two counts (positive = growth, negative = decline)
+-   No parameters
+
+### (2) Land Use Contract
+
+Description: Compares land cover area at two time points across forest, agricultural, and urban categories. The output summarizes how much land conversion pressure has occurred. This represents how much forest has been replaced by other uses.
+
+-   Inputs:
+    -   forest_t1: forest area at earlier time point (ha)
+    -   forest_t2: forest area at later time point (ha)
+    -   ag_t1: agricultural area at earlier time point (ha)
+    -   ag_t2: agricultural area at later time point (ha)
+    -   urban_t1: urban area at earlier time point (ha)
+    -   urban_t2: urban area at later time point (ha)
+-   Output
+    -   land_use_coeff: combined land conversion in hectares (higher = more forest replaced by ag or urban land)
+-   No parameters
+
+### (3) Wildfire Risk Contract
+
+Description: Combines climate conditions (rainfall, temperature), recent fire history, population pressure, and land use change to estimate how fire-prone the region is. Drier, hotter, more disturbed landscapes with more people score higher.
+
+-   Inputs
+    -   rainfall: total annual rainfall (mm)
+    -   hectares_burned: hectares affected by fire in prior year (ha)
+    -   avg_temp: average annual temperature ( degrees C)
+    -   net_pop_change: from calc_human_geog Module 1 (persons)
+    -   landuse_coeff: from calc_land_use Module 2 (ha)
+-   Output
+    -   fire_risk_score: regional fire risk index (unitless; higher = greater risk)
+-   Parameters
+    -   population pressure scaling factor, default 0.001
+
+### (4) Deforestation
+
+Description: Calculates how much forest has actually been lost, treating natural forest loss as ecologically more significant than plantation loss. Fire risk amplifies the deforestation factor because fire both directly destroys forest and makes remaining forest more vulnerable.
 
 -   Input
+    -   natural_forest_t1: natural forest area at earlier time point (ha)
+    -   natural_forest_t2: natural forest area at later time point (ha)
+    -   plantation_t1: timber plantation area at earlier time point (ha)
+    -   plantation_t2: timber plantation area at later time point (ha)
+    -   fire_risk_score: regional fire risk score from calc_wildfire_risk() Module 3 (unitless)
 -   Output
+    -   defor_factor: weighted forest loss (ha adjusted for forest type; higher = greater ecological loss)
 -   Parameters
+    -   nat_weight: ecological weight for natural forest loss (0-1), default 0.8
+    -   plan_weight: ecological weight for plantation loss (0-1), default 0.3
 
+### (5) Habitat Fragmentation
 
-### Land Use Contract 
+Description: Takes the deforestation factor and the remaining natural forest area to estimate how broken up the landscape has become. A landscape that has lost a lot of forest and has little remaining is highly fragmented. Fragmented forests have patches of habitat that are small and isolated, which threatens species persistence.
 
 -   Input
+    -   natural_forest_t2: remaining natural forest area at later time point (ha)
+    -   total_landscape_area: total area of the region being assessed (ha)
+    -   defor_factor: deforestation factor from calc_deforestation() Module 4 (unitless)
 -   Output
+    -   fragmentation score: landscape fragmentation index (unitless; higher = more fragmented landscape)
 -   Parameters
-
-### Wildfire Risk Contract 
-
--   Input
--   Output
--   Parameters
-
-### Deforestation 
-
--   Input
--   Output
--   Parameters
-
-### Habitat Fragmentation 
-
--   Input
--   Output
--   Parameters
+    -   small constant 0.001 added to connectivity denominator to prevent division by zero
 
 ```{r}
 
 ```
-
-
-
-
