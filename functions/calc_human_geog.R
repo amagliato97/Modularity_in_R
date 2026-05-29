@@ -1,23 +1,18 @@
+
 #' Human Geography Function
 #'
-#' function description 
-#' @param 
-#' @param 
-#' @return 
+#' Computes net population change from census data at two time points
+#' @param pop_t1 total population at earlier census period (persons)
+#' @param pop_t2 total population at later census period (persons)
+#' @return net population change between census periods (persons, positive = growth)
 #'
-# function definition
-Function Name = function(inputs, parameters) {
+human_geog = function(pop_t1, pop_t2) {
   
-  body of the function (manipulation of inputs)
+  net_pop_change = (pop_t2 - pop_t1)
     
-    return(values to return)
+    return(net_pop_change)
   
 }
-
-
-
-
-
 
 
 
