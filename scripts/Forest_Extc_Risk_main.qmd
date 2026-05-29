@@ -15,7 +15,13 @@ With a partner, think of an example complex data science task/program that you m
 
 ### Planning - Step 1
 
-Sketch a diagram that shows how these modules would be put together to go from inputs to output for the overall program (30pts) write a contract for the overall program (input, output, parameters) (10pts) break the program in to modules (naming them appropriately), write a contract for each one (20pts)
+Sketch a diagram that shows how these modules would be put together to go from inputs to output for the overall program (30pts)
+
+# Module Diagram
+
+![](design_diagram.jpg)
+
+write a contract for the overall program (input, output, parameters) (10pts) break the program in to modules (naming them appropriately), write a contract for each one (20pts)
 
 ### Implementation - Step 2
 
@@ -143,6 +149,7 @@ Description: Takes the deforestation factor and the remaining natural forest are
 ## Running the Program
 
 Call in functions:
+
 ```{r}
 library(here)
 
@@ -154,6 +161,7 @@ source(here("functions/calc_habitat_frag.R"))
 ```
 
 Create a dataframe:
+
 ```{r}
 
 scenarios = data.frame(
@@ -177,20 +185,69 @@ scenarios = data.frame(
 
 ```
 
-Create a loop:
-
---> Shey, could you tackle this? idk how to do it really 
+Create a loop and test program
 
 ```{r}
+run_extinction_risk <- function(scenarios) {
+results <- data.frame(
+  scenario          = integer(),
+  net_pop_change    = numeric(),
+  land_use_coeff    = numeric(),
+  fire_risk_score   = numeric(),
+  defor_factor      = numeric(),
+  fragmentation_score = numeric(),
+  extinction_risk   = numeric()
+)
 
+for (i in 1:nrow(scenarios)) {
+  s <- scenarios[i, ]   
+  
+  # Module 1
+  net_pop_change <- human_geog(s$pop_t1, s$pop_t2)
+  
+  # Module 2 
+  land_use_coeff <- land_use(
+    s$forest_t1, s$forest_t2,
+    s$ag_t1,     s$ag_t2,
+    s$urban_t1,  s$urban_t2
+  )
+  
+  # Module 3
+  fire_risk_score <- wildfire_risk(
+    s$rainfall, s$hectares_burned, s$avg_temp,
+    net_pop_change, land_use_coeff
+  )
+  
+  # Module 4 
+  defor_factor <- deforestation(
+    s$natural_forest_t1, s$natural_forest_t2,
+    s$plantation_t1,     s$plantation_t2,
+    fire_risk_score
+  )
+  
+  # Module 5
+  fragmentation_score <- habitat_frag(
+    s$natural_forest_t2,
+    s$total_landscape_area,
+    defor_factor
+  )
+  
+  # Final extinction risk score
+  extinction_risk <- (fire_risk_score * 0.3) +
+                     (defor_factor / 1000 * 0.4) +
+                     (fragmentation_score / 1000 * 0.3)
+  
+  # Store this iteration's results
+  results <- rbind(results, data.frame(
+    scenario            = i,
+    net_pop_change      = net_pop_change,
+    land_use_coeff      = land_use_coeff,
+    fire_risk_score     = fire_risk_score,
+    defor_factor        = defor_factor,
+    fragmentation_score = fragmentation_score,
+    extinction_risk     = extinction_risk
+  ))
+  print(results)
+}
+}
 ```
-
-
-
-
-
-
-
-
-
-
